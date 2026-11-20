@@ -42,6 +42,13 @@ def my_status(self):
         else:
             return "Fail"
 
-    def sub_list_text(self):
+def sub_list_text(self):
         if not self.sub_marks:
             return "None"
+        lines = []
+        for sub, val in self.sub_marks.items():
+            if val is None:
+                lines.append(f"{sub}: Pending")
+            else:
+                lines.append(f"{sub}: {val}")
+        return "\n".join(lines)
