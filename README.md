@@ -3,7 +3,7 @@
 ## Overview
 EduTrack is a simple, modular Python application built for managing student records, calculating grade averages, and ranking student performance. It is designed to demonstrate core programming principles, clean code structure, and data management. 
 
-This project comes in two versions—a text-based command-line interface (CLI) and a graphical user interface (GUI)—both of which share the exact same core logic.
+This project comes in two versions a text-based command-line interface (CLI) and a graphical user interface (GUI) both of which share the exact same core logic.
 
 ---
 
