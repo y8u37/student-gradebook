@@ -1,4 +1,5 @@
 import csv
+from mimetypes import init
 import os
 
 
@@ -52,3 +53,54 @@ def sub_list_text(self):
             else:
                 lines.append(f"{sub}: {val}")
         return "\n".join(lines)
+
+class GradeBook:
+    def __init__(self, file_name="student_gradebook.csv"):
+        self.file_name = file_name
+        self.records = {}
+        self.read_csv()
+
+    def ok_mail(self, mail):
+        m = mail.strip()
+        if "@" not in m or "." not in m:
+            halves = m.split("@")
+            if len(halves) != 2 or not halves[0] or "." not in halves[1]:
+                return False
+        return True
+    
+    def add_new_students(self,st_id, sname, mail, subs_raw=""):
+        sid = st_id.strip().upper()
+        nm = sname.strip().title()
+        em = mail.strip().lower()
+
+        if not sid:
+            return False, "ID required."
+        if not nm:
+            return False, "Name required."
+        if not self.ok_mail(em):
+            return False, "Invalid email format."
+        if sid in self.records:
+            return False, "ID already exists."
+
+        clean_subs = []
+        for s in subs_raw.split(","):
+            s = s.strip()
+            if s:
+                clean_subs.append(s)
+
+            self.records[sid] = Student(sid, nm, em, clean_subs)
+            self.write_csv()
+            return True, "Student added."   
+
+        def add_more_subs(self, st_id, subs_raw):
+            sid = st_id.strip().upper()
+            if sid not in self.records:
+                return False, "Student ID not found."
+            clean_subs = []
+            for s in subs_raw.split(","):
+                s = s.strip()
+                if s:
+                    clean_subs.append(s)
+       
+
+        
