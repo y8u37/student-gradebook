@@ -102,5 +102,57 @@ class GradeBook:
                 if s:
                     clean_subs.append(s)
        
+            if not clean_subs:
+                return False, "Enter a subject."
 
+            for s in clean_subs:
+                self.records[sid].put_subjects(s)
+
+            self.write_csv()
+            return True, "Subjects updated."
+
+        def give_mark(self, st_id, sub, num_text):
+            sid = st_id.strip().upper()
+            sb = fix_sub_name(sub)
+
+            if sid not in self.records:
+                return False, "ID not found."
+            if not sb:
+                return False, "Subjects required."
         
+            try:
+                num = float(num_text)
+            except ValueError:
+                return False, "Enter a valid number."
+            
+            if num < 0 or num > 100:
+                return False, "marks must be 0-100."
+
+            self.records[sid].put_marks(sb, num)
+            self.write_csv()
+            return True, "Mark saved."
+
+    def remove_student(self, st_id):
+        sid = st_id.strip().upper()
+        if sid not in self.records:
+            return False, "ID not found."
+
+        self.records.pop(sid)
+        self.write_csv()
+        return True, "Student deleted."
+
+    def search_and_rank(self, word=""):
+        w = word.strip().lower()
+        matched = []
+        for st in self.records.values():
+            all_sub_names = " ".join(st.sub_marks.keys()).lower()
+            if (not w
+                or w in st.st_id.lower()
+                or w in st.sname.lower()
+                or w in st.mail.lower()
+                or w in all_sub_names):
+                matched.append(st)
+
+        return sorted(matched, key=lambda st: (-st.calc_avg(), st.sname))
+    
+             
