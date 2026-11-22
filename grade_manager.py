@@ -22,6 +22,7 @@ class Student:
                 x = fix_sub_name(item)
                 if x:
                     self.sub_marks[x] = None         
+    def has_marks(self):
         has_marks = False
         for val in self.sub_marks.values():
             if val is not None:
@@ -40,17 +41,36 @@ class Student:
             return "Satisfactory"
         else:
             return "Fail"
+    def put_subject(self, sub):
+            x = fix_sub_name(sub)
+            if x and x not in self.sub_marks:
+                self.sub_marks[x] = None
+
+    put_subjects = put_subject
+
+    def put_mark(self, sub, val):
+            x = fix_sub_name(sub)
+            if x:
+                self.sub_marks[x] = float(val)
+
+    put_marks = put_mark
+
+    def calc_avg(self):
+            vals = [v for v in self.sub_marks.values() if v is not None]
+            if not vals:
+                return 0.0
+            return round(sum(vals) / len(vals), 2)
 
     def sub_list_text(self):
-        if not self.sub_marks:
-            return "None"
-        lines = []
-        for sub, val in self.sub_marks.items():
-            if val is None:
-                lines.append(f"{sub}: Pending")
-            else:
-                lines.append(f"{sub}: {val}")
-        return "\n".join(lines)
+            if not self.sub_marks:
+                return "None"
+            lines = []
+            for sub, val in self.sub_marks.items():
+                if val is None:
+                    lines.append(f"{sub}: Pending")
+                else:
+                    lines.append(f"{sub}: {val}")
+            return "\n".join(lines)
 
 class GradeBook:
     def __init__(self, file_name="student_gradebook.csv"):
@@ -105,7 +125,7 @@ class GradeBook:
                 return False, "Enter a subject."
 
             for s in clean_subs:
-                self.records[sid].put_subjects(s)
+                self.records[sid].put_subject(s)
 
             self.write_csv()
             return True, "Subjects updated."
@@ -127,7 +147,7 @@ class GradeBook:
             if num < 0 or num > 100:
                 return False, "marks must be 0-100."
 
-            self.records[sid].put_marks(sb, num)
+            self.records[sid].put_mark(sb, num)
             self.write_csv()
             return True, "Mark saved."
 
@@ -164,7 +184,7 @@ class GradeBook:
                         parts.append(f"{sub}:PENDING")
                     else:
                         parts.append(f"{sub}:{val}")
-                wr.writerow([st.st_id, st.name, st.email, "|".join(parts)])
+                wr.writerow([st.st_id, st.sname, st.mail, "|".join(parts)])
 
     def read_csv(self):
         if not os.path.exists(self.file_name):
@@ -183,17 +203,16 @@ class GradeBook:
                    st = Student(sid, nm, em)
                    if raw_g:
                        for pair in raw_g.split("|"):
-                           if "." in pair:
+                           if ":" in pair:
                                sb, v = pair.split(":", 1)
                                sb = fix_sub_name(sb)
-                               if v.strip().upper() =="PENDIND":
+                               if v.strip().upper() =="PENDING":
                                     st.put_subject(sb)
                                else:
                                     st.put_mark(sb, float(v))
                    self.records[sid] = st
                except Exception:
                     continue
-                        
 
                        
 
