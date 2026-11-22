@@ -22,8 +22,6 @@ class Student:
                 x = fix_sub_name(item)
                 if x:
                     self.sub_marks[x] = None         
-
-def my_status(self):
         has_marks = False
         for val in self.sub_marks.values():
             if val is not None:
@@ -43,7 +41,7 @@ def my_status(self):
         else:
             return "Fail"
 
-def sub_list_text(self):
+    def sub_list_text(self):
         if not self.sub_marks:
             return "None"
         lines = []
@@ -92,15 +90,16 @@ class GradeBook:
             self.write_csv()
             return True, "Student added."   
 
-        def add_more_subs(self, st_id, subs_raw):
+    def add_more_subs(self, st_id, subs_raw):
             sid = st_id.strip().upper()
             if sid not in self.records:
                 return False, "Student ID not found."
+            
             clean_subs = []
             for s in subs_raw.split(","):
                 s = s.strip()
                 if s:
-                    clean_subs.append(s)
+                    clean_subs.append(s) 
        
             if not clean_subs:
                 return False, "Enter a subject."
@@ -111,14 +110,14 @@ class GradeBook:
             self.write_csv()
             return True, "Subjects updated."
 
-        def give_mark(self, st_id, sub, num_text):
+    def give_mark(self, st_id, sub, num_text):
             sid = st_id.strip().upper()
             sb = fix_sub_name(sub)
 
             if sid not in self.records:
                 return False, "ID not found."
             if not sb:
-                return False, "Subjects required."
+                return False, "Subject required."
         
             try:
                 num = float(num_text)
@@ -146,8 +145,7 @@ class GradeBook:
         matched = []
         for st in self.records.values():
             all_sub_names = " ".join(st.sub_marks.keys()).lower()
-            if (not w
-                or w in st.st_id.lower()
+            if (not w or w in st.st_id.lower()
                 or w in st.sname.lower()
                 or w in st.mail.lower()
                 or w in all_sub_names):
@@ -155,4 +153,51 @@ class GradeBook:
 
         return sorted(matched, key=lambda st: (-st.calc_avg(), st.sname))
     
-             
+    def write_csv(self):
+        with open(self.file_name, mode="w", newline="", encoding="utf-8") as fp:
+            wr = csv.writer(fp)
+            wr.writerow(["student_id", "name", "email", "grades_data"])
+            for st in self.records.values():
+                parts = []
+                for sub, val in st.sub_marks.items():
+                    if val is None:
+                        parts.append(f"{sub}:PENDING")
+                    else:
+                        parts.append(f"{sub}:{val}")
+                wr.writerow([st.st_id, st.name, st.email, "|".join(parts)])
+
+    def read_csv(self):
+        if not os.path.exists(self.file_name):
+            return
+        with open(self.file_name, mode="r", newline="", encoding="utf-8") as fp:
+           rd = csv.DictReader(fp)
+           for r in rd:
+               try:
+                   sid = r.get("student_id", "").strip().upper()
+                   nm = r.get("name", "").strip().title()
+                   em = r.get("email", "").strip().lower()
+                   raw_g = r.get("grades_data", "").strip()
+
+                   if not sid or not nm:
+                          continue
+                   st = Student(sid, nm, em)
+                   if raw_g:
+                       for pair in raw_g.split("|"):
+                           if "." in pair:
+                               sb, v = pair.split(":", 1)
+                               sb = fix_sub_name(sb)
+                               if v.strip().upper() =="PENDIND":
+                                    st.put_subject(sb)
+                               else:
+                                    st.put_mark(sb, float(v))
+                   self.records[sid] = st
+               except Exception:
+                    continue
+                        
+
+                       
+
+                    
+
+
+            
