@@ -21,7 +21,7 @@ def run_menu():
             nm = input("Name: ")
             em = input("Email: ")
             sb = input("Subjects (comma separated): ")
-            done, msg = book.add_new_student(sid, nm, em, sb)
+            done, msg = book.add_new_students(sid, nm, em, sb)
             print(msg)
 
         elif opt == "2":
@@ -46,8 +46,8 @@ def run_menu():
             else:
                 pos = 1
                 for st in ordered: 
-                    print(f"\n{pos}. [{st.st_id}] {st.namre} ({st.mail})")
-                    print(f"   Avg: {st.calc_avg()} | Status: {st.my_status()}")
+                    print(f"\n{pos}. [{st.st_id}] {st.sname} ({st.mail})")
+                    print(f"   Avg: {st.calc_avg()}")
                     for line in st.sub_list_text().split("\n"):
                         print(f"  - {line}")
                     pos = pos + 1
