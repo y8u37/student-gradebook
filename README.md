@@ -9,9 +9,9 @@ This project comes in two versions a text-based command-line interface (CLI) and
 
 ## Project Structure
 To keep things clean and maintainable, the project is split into three main parts:
-* **`student_logic.py`**: Handles all the heavy lifting. This file manages the data structure (lists and dictionaries), data calculations (averages and rankings), and file reading/writing (`students_data.csv`).
-* **`main_cli.py`**: The command-line front end. It allows users to interact with the system entirely through text prompts in the terminal.
-* **`main_gui.py`**: The graphical front end built using Python's built-in `tkinter` library. It provides a visual table and menus while utilizing the exact same logic as the text version.
+* **`grade_manager.py`**: Handles all the heavy lifting. This file manages the data structure (lists and dictionaries), data calculations (averages and rankings), and file reading/writing (`students_data.csv`).
+* **`grade_cli.py`**: The command-line front end. It allows users to interact with the system entirely through text prompts in the terminal.
+* **`grade_gui.py`**: The graphical front end built using Python's built-in `tkinter` library. It provides a visual table and menus while utilizing the exact same logic as the text version.
 
 ---
 
