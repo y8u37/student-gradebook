@@ -24,10 +24,15 @@ To keep things clean and maintainable, the project is split into three main part
 ---
 
 ## Running the application
-Ensure python 3 is installed and all project files (such as 'main_cli.py', 'main_gui.py', logic/manager modules, and CSV data file) are kept in the same project directory
+Ensure python 3 is installed and all project files (such as 'grade_cli.py', 'grade_gui.py', logic/manager modules, and CSV data file) are kept in the same project directory
 ### Command-line Interface (CLI)
 open a terminal or command prompt inside project folder and run:
 ```bash
-python main_cli.py
+python grade_cli.py
+```
+### Graphical User Interface (GUI)
+open a terminal or command prompt inside project folder and run:
+```bash
+python grade_gui.py
 ```
 
