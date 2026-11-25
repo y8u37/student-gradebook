@@ -1,5 +1,4 @@
 import csv
-from mimetypes import init
 import os
 
 
@@ -80,9 +79,8 @@ class GradeBook:
 
     def ok_mail(self, mail):
         m = mail.strip()
-        if "@" not in m or "." not in m:
-            halves = m.split("@")
-            if len(halves) != 2 or not halves[0] or "." not in halves[1]:
+        halves = m.split("@")
+        if len(halves) != 2 or not halves[0] or "." not in halves[1]:
                 return False
         return True
     
@@ -145,7 +143,7 @@ class GradeBook:
                 return False, "Enter a valid number."
             
             if num < 0 or num > 100:
-                return False, "marks must be 0-100."
+                return False, "Marks must be 0-100."
 
             self.records[sid].put_mark(sb, num)
             self.write_csv()
@@ -212,11 +210,7 @@ class GradeBook:
                                     st.put_mark(sb, float(v))
                    self.records[sid] = st
                except Exception:
-                    continue
-
-                       
-
-                    
+                    continue  
 
 
             
