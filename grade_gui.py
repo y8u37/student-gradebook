@@ -263,7 +263,103 @@ class MyGradeApp:
         self.grid.bind("<<,TreeviewSelect>>", self.pick_student)
 
 
+    def set_msg(self, text):
+        self.msg_lbl.config(text=text)
 
+    def clear_reg_fields(self): 
+        self.e_id.delete(0, tk.END)
+        self.e_name.delete(0, tk.END)
+        self.e_mail.delete(0, tk.END)
+        self.e_subs.delete(0, tk.END)
+        self.set_msg("Fields cleared.")
 
-        
-        
+    def pick_student(self, event):
+        sel = self.grid.selection()
+        if sel:
+            data = self.grid.item(sel[0], "Values")
+            if data:
+                self.m_id.delete(0, tk.END)
+                self.m_id.insert(0, data[1])
+                self.set_msg(f"Selected: {data[2]} ({data[1]})")
+
+    def on_add_student(self):
+        sid = self.e_id.get()
+        nm = self.e_name.get()
+        em = self.e_mail.get()
+        sb = self.e_subs.get()
+
+        done, msg = self.book.add_new_student(sid, nm, em, sb)
+        if not done:
+            messagebox.showerror("Error", msg)
+            return
+
+        self.m_id.delete(0, tk.END)
+        self.m_id.insert(0, sid.strip().upper())
+        self.clear_reg_fields()
+        self.set_msg(msg)
+        self.show_rows()
+
+    def on_add_sub(self):
+        sid = self.m_id.get()
+        sb = self.m_sub.get()
+        done, msg = self.book.add_more_subs(sid, sb)
+        if not done:
+            messagebox.showerror("Error", msg)
+            return
+
+        self.m_sub.delete(0, tk.END)
+        self.set_msg(msg)
+        self.show_rows()
+
+    def on_save_mark(self):
+        sid = self.m_id.get()
+        sb = self.m_sub.get()
+        val = self.m_val.get()
+
+        done, msg = self.book.give_mark(sid, sb, val)
+        if not done:
+            messagebox.showerror("Error", msg)
+            return
+
+        self.m_sub.delete(0, tk.END)
+        self.m_val.delete(0, tk.END)
+        self.set_msg(msg)
+        self.show_rows()
+
+    def on_delete(self):
+        sel = self.grid.selection()
+        if not sel:
+            messagebox.showwarning("Alert", "Select a student first.")
+            return
+
+        data = self.grid.item(sel[0], "values")
+        sid, nm = data[1], data[2]
+        if messagebox.askyesno("Confirm", f"Delete {nm} ({sid})?"):
+            done, msg = self.book.remove_student(sid)
+            if done:
+                self.set_msg(msg)
+                self.show_rows()
+
+    def show_rows(self):
+        for r in self.grid_children():
+            self.grid.delete(r)
+
+        ordered = self.book.search_and_rank(self.find_var.get())
+        self.count_lbl.config(text=f"Students: {len(self.book.records)}")
+
+        for idx, st in enumerate(ordered, start=1):
+            self.grid.insert("", "end",
+                             values=(
+                                 idx,
+                                 st.st_id,
+                                 st.sname,
+                                 st.mail,
+                                 st.sub_list_text(),
+                                 st.calc_avg(),
+                                 st.my_status(),
+                             ))
+
+if __name__ =="__main__":
+    root = tk.TK()
+    app = MyGradeApp(root)
+    root.mainloop()
