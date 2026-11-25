@@ -215,7 +215,7 @@ class MyGradeApp:
             font=("Segoe UI", 9, "bold"),
         ).pack(side="left")
         self.find_var = tk.StringVar()
-        self.find_var.trace_add("write", lambda *args: self.show_row())
+        self.find_var.trace_add("write", lambda *args: self.show_rows())
         search_box = self.make_box(tool_row, width=34)
         search_box.configure(textvariable=self.find_var)
         search_box.pack(side="left", padx=8, ipady=2)
@@ -236,7 +236,7 @@ class MyGradeApp:
         grid_wrap = tk.Frame(self.win, bg="#F4F6F9", padx=14, pady=6)
         grid_wrap.pack(fill="both", expand=True)
 
-        my_cols = ("pos", "id", "name", "email", "subjects", "avg" "status")
+        my_cols = ("pos", "id", "name", "email", "subjects", "avg", "status")
         self.grid = ttk.Treeview(grid_wrap, column=my_cols, show="headings")
 
         self.grid.heading("pos", text="Rank")
@@ -270,10 +270,10 @@ class MyGradeApp:
         self.e_id.delete(0, tk.END)
         self.e_name.delete(0, tk.END)
         self.e_mail.delete(0, tk.END)
-        self.e_subs.delete(0, tk.END)
+        self.e_subjects.delete(0, tk.END)
         self.set_msg("Fields cleared.")
 
-    def pick_student(self, event):
+    def pick_student(self, event=None):
         sel = self.grid.selection()
         if sel:
             data = self.grid.item(sel[0], "Values")
@@ -286,9 +286,9 @@ class MyGradeApp:
         sid = self.e_id.get()
         nm = self.e_name.get()
         em = self.e_mail.get()
-        sb = self.e_subs.get()
+        sb = self.e_subjects.get()
 
-        done, msg = self.book.add_new_student(sid, nm, em, sb)
+        done, msg = self.book.add_new_students(sid, nm, em, sb)
         if not done:
             messagebox.showerror("Error", msg)
             return
@@ -341,7 +341,7 @@ class MyGradeApp:
                 self.show_rows()
 
     def show_rows(self):
-        for r in self.grid_children():
+        for r in self.grid.get_children():
             self.grid.delete(r)
 
         ordered = self.book.search_and_rank(self.find_var.get())
@@ -356,7 +356,7 @@ class MyGradeApp:
                                  st.mail,
                                  st.sub_list_text(),
                                  st.calc_avg(),
-                                 st.my_status(),
+                                 st.has_marks(),
                              ))
 
 if __name__ =="__main__":
