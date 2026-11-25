@@ -26,7 +26,7 @@ def run_menu():
 
         elif opt == "2":
             sid = input("ID: ") 
-            sb = input("Subjects (comma seprated): ") 
+            sb = input("Subjects (comma separated): ") 
             done, msg = book.add_more_subs(sid,sb)
             print(msg)
 
