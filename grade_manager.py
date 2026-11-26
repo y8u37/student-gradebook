@@ -211,6 +211,11 @@ class GradeBook:
                    self.records[sid] = st
                except Exception:
                     continue  
-
+               
+if __name__ == "__main__":
+    book = GradeBook()
+    print("Loaded students:", len(book.records))
+    for sid, st in book.records.items():
+        print(sid, st.name, st.calc_avg())
 
             
