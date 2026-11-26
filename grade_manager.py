@@ -216,6 +216,6 @@ if __name__ == "__main__":
     book = GradeBook()
     print("Loaded students:", len(book.records))
     for sid, st in book.records.items():
-        print(sid, st.name, st.calc_avg())
+        print(sid, st.sname, st.calc_avg())
 
             
