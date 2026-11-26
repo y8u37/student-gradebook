@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from grade_manager import GradeBook
 
-
 class MyGradeApp:
     def __init__(self, win):
         self.win = win
@@ -360,6 +359,6 @@ class MyGradeApp:
                              ))
 
 if __name__ =="__main__":
-    root = tk.TK()
+    root = tk.Tk()
     app = MyGradeApp(root)
     root.mainloop()
