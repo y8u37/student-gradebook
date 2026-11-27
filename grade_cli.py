@@ -1,6 +1,6 @@
 from grade_manager import GradeBook
 
-
+# Main cli loop which displays option from 1-6 and handles user choice
 def run_menu():
     book = GradeBook()
 
@@ -15,7 +15,7 @@ def run_menu():
         print("6. Exit")
 
         opt = input("Option (1-6). ").strip()
-
+# Option 1: Collect new student details and pass them to GradeBook
         if opt =="1":
             sid = input("ID: ") 
             nm = input("Name: ")
@@ -23,20 +23,20 @@ def run_menu():
             sb = input("Subjects (comma separated): ")
             done, msg = book.add_new_students(sid, nm, em, sb)
             print(msg)
-
+# Option 2: To add more subjects for an existing student
         elif opt == "2":
             sid = input("ID: ") 
             sb = input("Subjects (comma separated): ") 
             done, msg = book.add_more_subs(sid,sb)
             print(msg)
-
+# Option 3: Save subjects names and marks (0-100) for a student
         elif opt == "3":
             sid = input("ID: ")
             sb = input("Subject: ")
             val = input("Mark (0-100): ")
             done, msg = book.give_mark(sid, sb, val)
             print(msg) 
-
+# Option 4: Search and show ranked student in order 
         elif opt == "4":
             q = input("Search (or press Enter): ")
             ordered = book.search_and_rank(q)
@@ -51,15 +51,16 @@ def run_menu():
                     for line in st.sub_list_text().split("\n"):
                         print(f"  - {line}")
                     pos = pos + 1
-
+# Option 5: Put student ID and delete student record
         elif opt == "5":
             sid = input("ID to delete: ")
             done, msg = book.remove_student(sid)
             print(msg)
-
+# OPtion 6: Stop the loop and exit the CLI program
         elif opt == "6":
             print("Exit.")
             break
+# If user selects any option outside 1-6 will show invalid option   
         else:
             print("Invalid option.")
 
