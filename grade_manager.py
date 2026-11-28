@@ -1,7 +1,7 @@
 import csv
 import os
 
-
+# Clean subject text and keep short codes uppercase
 def fix_sub_name(text):
     t = text.strip()
     if not t:
@@ -10,6 +10,7 @@ def fix_sub_name(text):
         return t.upper()
     return t.title()
 
+# Represents a student along with their subjects and marks
 class Student:
     def __init__(self, st_id, sname, mail="", subs=None):
         self.st_id = st_id.strip().upper()
@@ -20,7 +21,9 @@ class Student:
             for item in subs:
                 x = fix_sub_name(item)
                 if x:
-                    self.sub_marks[x] = None         
+                    self.sub_marks[x] = None 
+
+# Check if any marks entered then return status or grade                           
     def has_marks(self):
         has_marks = False
         for val in self.sub_marks.values():
@@ -71,6 +74,7 @@ class Student:
                     lines.append(f"{sub}: {val}")
             return "\n".join(lines)
 
+# Manage student records, mails, searching, and csv saving or loading
 class GradeBook:
     def __init__(self, file_name="student_gradebook.csv"):
         self.file_name = file_name
@@ -83,7 +87,8 @@ class GradeBook:
         if len(halves) != 2 or not halves[0] or "." not in halves[1]:
                 return False
         return True
-    
+
+# Confirm student details and email before adding records    
     def add_new_students(self,st_id, sname, mail, subs_raw=""):
         sid = st_id.strip().upper()
         nm = sname.strip().title()
@@ -108,6 +113,7 @@ class GradeBook:
             self.write_csv()
             return True, "Student added."   
 
+# Split comma-separated subjects and add new ones to students
     def add_more_subs(self, st_id, subs_raw):
             sid = st_id.strip().upper()
             if sid not in self.records:
@@ -128,6 +134,7 @@ class GradeBook:
             self.write_csv()
             return True, "Subjects updated."
 
+# Check valid number between 0 and 100 and save mark
     def give_mark(self, st_id, sub, num_text):
             sid = st_id.strip().upper()
             sb = fix_sub_name(sub)
@@ -148,7 +155,7 @@ class GradeBook:
             self.records[sid].put_mark(sb, num)
             self.write_csv()
             return True, "Mark saved."
-
+# Check if student id exists and remove record if found 
     def remove_student(self, st_id):
         sid = st_id.strip().upper()
         if sid not in self.records:
@@ -158,6 +165,7 @@ class GradeBook:
         self.write_csv()
         return True, "Student deleted."
 
+# Match search text across fields and sort by average
     def search_and_rank(self, word=""):
         w = word.strip().lower()
         matched = []
@@ -170,7 +178,8 @@ class GradeBook:
                 matched.append(st)
 
         return sorted(matched, key=lambda st: (-st.calc_avg(), st.sname))
-    
+
+# Save student records and subject marks into the csv file  
     def write_csv(self):
         with open(self.file_name, mode="w", newline="", encoding="utf-8") as fp:
             wr = csv.writer(fp)
@@ -184,6 +193,8 @@ class GradeBook:
                         parts.append(f"{sub}:{val}")
                 wr.writerow([st.st_id, st.sname, st.mail, "|".join(parts)])
 
+
+# Read saved student data back from csv and skip bad rows
     def read_csv(self):
         if not os.path.exists(self.file_name):
             return
