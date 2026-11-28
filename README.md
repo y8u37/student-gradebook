@@ -1,3 +1,5 @@
+## I acknowledge the use of Microsoft Copilot
+ I acknowledge that i used Microsoft Copilot for helping create this README and for guidance on creating branches, committing, pushing and merging.
 # EduTrack: Student Grade & Performance Management System
 
 ## Overview
