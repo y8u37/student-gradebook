@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from grade_manager import GradeBook
 
+# Main tkinter window for gradebook
 class MyGradeApp:
     def __init__(self, win):
         self.win = win
@@ -15,6 +16,7 @@ class MyGradeApp:
         self.make_screen()
         self.show_rows()
 
+# Set up ttk theme and row colours for the table
     def setup_style(self):
         st = ttk.Style()
         if "clam" in st.theme_names():
@@ -33,6 +35,7 @@ class MyGradeApp:
             foreground=[("selected", "#1E3A8A")],
         )
 
+# Helper to make a standard input box with consistent width
     def make_box(self, parent, width=28):
         return tk.Entry(
             parent,
@@ -44,6 +47,7 @@ class MyGradeApp:
             bd=1,
         )
 
+# Build the main window layout and sections
     def make_screen(self):
         status_bar = tk.Frame(self.win, bg="#E5E7EB", padx=14, pady=6)
         status_bar.pack(fill="x", side="bottom")
@@ -57,6 +61,7 @@ class MyGradeApp:
         )
         self.msg_lbl.pack(side="left")
 
+# Top header with app title and student count
         top_bar = tk.Frame(self.win, bg="#1E293B", padx=16, pady=12)
         top_bar.pack(fill="x")
 
@@ -77,9 +82,11 @@ class MyGradeApp:
         )
         self.count_lbl.pack(side="right")
 
+# making row for registration and marks box
         forms_row = tk.Frame(self.win, bg="#F4F6F9", padx=14, pady=8)
         forms_row.pack(fill="x")
 
+# Students registration form section
         st_box = tk.LabelFrame(
             forms_row,
             text="Register student",
@@ -141,6 +148,7 @@ class MyGradeApp:
             command=self.clear_reg_fields,
         ).pack(side="left", padx=(4, 0))
 
+#Subjects and marks form section
         mk_box = tk.LabelFrame(
             forms_row,
             text="Subjects & Marks",
@@ -201,7 +209,8 @@ class MyGradeApp:
             cursor="hand2",
             command=self.on_add_sub,
         ).pack(side="left", fill="x", expand=True, padx=(4, 0))
-    
+
+# Search bar and delete button row    
         tool_row = tk.Frame(self.win, bg="#F4F6F9", padx=14, pady=4)
         tool_row.pack(fill="x")
 
@@ -232,6 +241,7 @@ class MyGradeApp:
             command=self.on_delete,
         ).pack(side="right")
 
+# Main table area showing ranked students
         grid_wrap = tk.Frame(self.win, bg="#F4F6F9", padx=14, pady=6)
         grid_wrap.pack(fill="both", expand=True)
 
@@ -259,12 +269,14 @@ class MyGradeApp:
 
         self.grid.pack(side="left", fill="both", expand=True)
         bar.pack(side="right", fill="y")
-        self.grid.bind("<<,TreeviewSelect>>", self.pick_student)
+        self.grid.bind("<<TreeviewSelect>>", self.pick_student)
 
 
+# Update text in the bottom status bar 
     def set_msg(self, text):
         self.msg_lbl.config(text=text)
 
+# Clear out the registration input fields 
     def clear_reg_fields(self): 
         self.e_id.delete(0, tk.END)
         self.e_name.delete(0, tk.END)
@@ -272,6 +284,7 @@ class MyGradeApp:
         self.e_subjects.delete(0, tk.END)
         self.set_msg("Fields cleared.")
 
+# Copy selected row id and paste it into mark entry box
     def pick_student(self, event=None):
         sel = self.grid.selection()
         if sel:
@@ -281,6 +294,7 @@ class MyGradeApp:
                 self.m_id.insert(0, data[1])
                 self.set_msg(f"Selected: {data[2]} ({data[1]})")
 
+# Add student from form fields and refresh table
     def on_add_student(self):
         sid = self.e_id.get()
         nm = self.e_name.get()
@@ -298,6 +312,7 @@ class MyGradeApp:
         self.set_msg(msg)
         self.show_rows()
 
+# Add subjects to the selected student
     def on_add_sub(self):
         sid = self.m_id.get()
         sb = self.m_sub.get()
@@ -310,6 +325,7 @@ class MyGradeApp:
         self.set_msg(msg)
         self.show_rows()
 
+# Save mark for a subject and update table
     def on_save_mark(self):
         sid = self.m_id.get()
         sb = self.m_sub.get()
@@ -325,6 +341,7 @@ class MyGradeApp:
         self.set_msg(msg)
         self.show_rows()
 
+# Ask user confirmation before deleting the student
     def on_delete(self):
         sel = self.grid.selection()
         if not sel:
@@ -339,6 +356,7 @@ class MyGradeApp:
                 self.set_msg(msg)
                 self.show_rows()
 
+# Refresh table with filtered and ranked records
     def show_rows(self):
         for r in self.grid.get_children():
             self.grid.delete(r)
